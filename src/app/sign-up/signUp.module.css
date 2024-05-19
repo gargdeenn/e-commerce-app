@@ -1,0 +1,18 @@
+.flexContainer{
+    background-image: url('../../../public/banner.jpg');
+    background-size: cover;
+    backdrop-filter: brightness(.2);
+    height: auto;
+    padding: 2%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width:500px) {
+    .flexContainer{
+        background-image: none;
+        background-color: white;
+        height: auto;
+    }
+}

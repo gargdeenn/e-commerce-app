@@ -1,0 +1,14 @@
+.filterToCategory{
+    transition: all ease-in-out .2s;
+    filter: grayscale(1) brightness(.7);
+}
+.filterToCategory:hover{
+    filter: grayscale(0);
+}
+
+@media (max-width:992px) {
+    .filterToCategory{
+        transition: all ease-in-out .2s;
+        filter: grayscale(0);
+    }
+}
