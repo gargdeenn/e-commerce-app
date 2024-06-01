@@ -6,9 +6,9 @@ import Image from "next/image";
 
 export default function Navbar(){
 
-    useEffect(()=>{
-        initTWE({ Collapse, Dropdown });
-    }, [])
+    // useEffect(()=>{
+    //     initTWE({ Collapse, Dropdown });
+    // }, [])
 
     return <>
         <nav
@@ -40,7 +40,7 @@ export default function Navbar(){
             className="!visible hidden flex-grow basis-[100%] items-center lg:!flex lg:basis-auto"
             id="navbarSupportedContent1"
             data-twe-collapse-item>
-            <a
+            {/* <a
                 className="mb-4 me-5 ms-2 mt-3 flex items-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:mb-0 lg:mt-0"
                 href={'/'}>
                 <Image
@@ -50,7 +50,7 @@ export default function Navbar(){
                 alt="TE Logo"
                 loading="lazy" />
 
-            </a>
+            </a> */}
             
             <ul
                 className="list-style-none me-auto flex flex-col ps-0 lg:flex-row"
@@ -118,9 +118,24 @@ export default function Navbar(){
                 </svg>
                 </span>
             </a>
+            
+            <div className="relative flex items-center">
+                <a className="me-4 text-neutral-600 dark:text-white" href="login">
+                    <span className="[&>svg]:w-5">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor">
+                            <path
+                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 1.5c-2.67 0-8 1.34-8 4v1.5c0 .83.67 1.5 1.5 1.5h13c.83 0 1.5-.67 1.5-1.5V17.5c0-2.66-5.33-4-8-4z" />
+                        </svg>
+                    </span>
+                </a>
+            </div>
+
 
             
-            <div
+            {/* <div
                 className="relative"
                 data-twe-dropdown-ref
                 data-twe-dropdown-alignment="end">
@@ -222,7 +237,7 @@ export default function Navbar(){
                     >Something else here</a>
                 </li>
                 </ul>
-            </div>
+            </div> */}
             </div>
         </div>
         </nav>

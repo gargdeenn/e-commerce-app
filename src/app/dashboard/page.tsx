@@ -20,7 +20,7 @@ ChartJS.register(
     Tooltip,
     Legend
 );
-
+import Guard from '../components/guards/Guard';
 
 import NavbarAdmin from "../components/navbar/navbar-admin"
 
@@ -54,6 +54,8 @@ export default function Dashboard(){
     };
 
     return <>
+    <Guard>
+
         <NavbarAdmin />
         <div className="flex w-full overflow-hidden bg-white ">
             <div id="main-content" className="h-full w-full bg-gray-50 relative overflow-y-auto pl-64">
@@ -440,5 +442,6 @@ export default function Dashboard(){
                 </main>
             </div>
         </div>
+    </Guard>
     </>
 }
