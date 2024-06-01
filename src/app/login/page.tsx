@@ -3,8 +3,11 @@ import { useState } from 'react';
 import NavbarLogout from '../components/navbar/navbar-logout';
 import LoginStyle from './login.module.css';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import Guard from '../components/guards/Guard';
 
 const Login = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -36,12 +39,10 @@ const Login = () => {
         "is_active": null
       }
       const response = await api.post('/auth/login', payload);  // Ajusta la ruta según tu API
-      console.log(response)
       localStorage.setItem('authToken', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
-      alert('Inicio de sesión exitoso');
-      if (user) {
-          console.log(user);
+      if (response) {
+        router.push('/dashboard');
       }
     } catch (error) {
       console.error(error);
@@ -127,4 +128,10 @@ const Login = () => {
   );
 };
 
-export default Login;
+const ProtectedLogin = () => (
+  <Guard>
+    <Login />
+  </Guard>
+);
+
+export default ProtectedLogin;

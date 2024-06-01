@@ -16,7 +16,7 @@ interface Country {
 
 const SignUp = () => {
   const formRef = useRef<HTMLFormElement>(null);
-  const [paises, setPaises] = useState<Country[]>([]);
+  const [paises, setPaises] = useState([]);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
