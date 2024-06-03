@@ -4,6 +4,7 @@ import NavbarLogout from '../components/navbar/navbar-logout';
 import SignUpStyle from './signUp.module.css';
 import axios from 'axios';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 interface Country {
   name: {
@@ -15,6 +16,7 @@ interface Country {
 }
 
 const SignUp = () => {
+  const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [paises, setPaises] = useState([]);
   const [formData, setFormData] = useState({
@@ -94,8 +96,7 @@ const SignUp = () => {
             baseURL: 'http://localhost:8000',
         });
         const response = await api.post('/users/', payload);
-        console.log(response.data);
-        alert('Usuario registrado con éxito');
+        router.push('/login');
     } catch (error) {
         console.error(error);
         alert('Hubo un error al registrar el usuario');

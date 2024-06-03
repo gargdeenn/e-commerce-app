@@ -4,8 +4,10 @@ import { PhotoIcon } from '@heroicons/react/24/solid';
 import axios from 'axios';
 import { useState } from 'react';
 import { useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function AddProduct() {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         nombre: '',
         precio_unitario: '',
@@ -94,6 +96,9 @@ export default function AddProduct() {
                     'Content-Type': 'multipart/form-data'
                 }
             });
+            if (response) {
+                router.push('/historial');                
+            }
 
             if (response) {
                 console.log('Producto agregado exitosamente');
