@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import NavbarLogout from '../components/navbar/navbar-logout';
 import SignUpStyle from './signUp.module.css';
 import axios from 'axios';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 interface Country {
@@ -18,7 +17,7 @@ interface Country {
 const SignUp = () => {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
-  const [paises, setPaises] = useState([]);
+  const [paises, setPaises] = useState<Country[]>([]);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -34,13 +33,17 @@ const SignUp = () => {
 
   useEffect(() => {
     const fetchPaises = async () => {
-      const res = await axios.get('https://restcountries.com/v3.1/all');
-      const sortedData = res.data.sort((a: any, b: any) => {
-        if (a.name.common < b.name.common) return -1;
-        if (a.name.common > b.name.common) return 1;
-        return 0;
-      });
-      setPaises(sortedData);
+      try {
+        const res = await axios.get('https://restcountries.com/v3.1/all');
+        const sortedData = res.data.sort((a: Country, b: Country) => {
+          if (a.name.common < b.name.common) return -1;
+          if (a.name.common > b.name.common) return 1;
+          return 0;
+        });
+        setPaises(sortedData);
+      } catch (error) {
+        console.error('Error fetching countries:', error);
+      }
     };
 
     fetchPaises();
@@ -92,14 +95,14 @@ const SignUp = () => {
     };
 
     try {
-        const api = axios.create({
-            baseURL: 'http://localhost:8000',
-        });
-        const response = await api.post('/users/', payload);
-        router.push('/login');
+      const api = axios.create({
+        baseURL: 'http://localhost:8000',
+      });
+      await api.post('/users/', payload); // Asegúrate de usar 'await' aquí
+      router.push('/login');
     } catch (error) {
-        console.error(error);
-        alert('Hubo un error al registrar el usuario');
+      console.error('Error registering user:', error);
+      alert('Hubo un error al registrar el usuario');
     }
   };
 
@@ -326,14 +329,13 @@ const SignUp = () => {
 
           <div className="mt-6 flex items-center justify-end gap-x-6">
             <button type="button" className="text-sm font-semibold leading-6 text-gray-900">
-              Cancel
+              Cancelar
             </button>
             <button
               type="submit"
               className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-              
             >
-              Save
+              Guardar
             </button>
           </div>
         </form>

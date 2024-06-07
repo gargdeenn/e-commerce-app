@@ -1,14 +1,26 @@
 'use client'
-import { Collapse, Dropdown, initTWE } from "tw-elements";
-import { useEffect } from "react";
+import { Collapse, Dropdown, initTWE, Offcanvas, Ripple, } from "tw-elements";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-
+import { useRouter } from "next/navigation";
+import Guard from "../guards/Guard";
 
 export default function Navbar(){
-
+    const router = useRouter();
     // useEffect(()=>{
     //     initTWE({ Collapse, Dropdown });
     // }, [])
+    const [isOpen, setIsOpen] = useState(false);
+    
+    function closeSession(){
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        router.push('/login')
+    };
+
+    const toggleDropdown = () => {
+        setIsOpen(!isOpen);
+    };
 
     return <>
         <nav
@@ -80,6 +92,19 @@ export default function Navbar(){
                     data-twe-nav-link-ref
                     >Productos</a>
                 </li>
+
+                <li className="mb-4 lg:mb-0 lg:pe-2" data-twe-nav-item-ref>
+                    <div className="dropdown">
+                        <button className="dropdown-toggle" onClick={toggleDropdown}>
+                            Otros
+                        </button>
+                        {isOpen && (
+                            <div className="dropdown-menu mt-4">
+                            <a href="/vacantes" className="dropdown-item">Vacantes</a>
+                            </div>
+                        )}
+                    </div>
+                </li>
             </ul>
             
             </div>
@@ -107,7 +132,7 @@ export default function Navbar(){
             </div>
             
             <div className="relative flex items-center">
-            <a className="me-4 text-neutral-600 dark:text-white" href="#">
+            <a className="me-4 text-neutral-600 dark:text-white" href="dashboard-user">
                 <span className="[&>svg]:w-5">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -131,6 +156,11 @@ export default function Navbar(){
                         </svg>
                     </span>
                 </a>
+                
+                    <div onClick={closeSession}>
+                        <img src="https://www.shutterstock.com/image-vector/logout-icon-exit-vector-sign-600nw-1654024198.jpg" alt="Avatar" width="30"></img>
+                    </div>
+               
             </div>
 
 
