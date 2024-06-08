@@ -97,7 +97,7 @@ export default function AddProduct() {
                 }
             });
             if (response) {
-                router.push('/historial');                
+                // router.push('/historial');                
             }
 
             if (response) {

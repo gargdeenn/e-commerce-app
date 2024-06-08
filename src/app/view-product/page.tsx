@@ -1,15 +1,15 @@
 'use client'
-import axios from "axios"
-import { useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
-import Image from "next/image"
-import LoadingImage from "../components/loading-image/loading-image"
+import axios from "axios";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import LoadingImage from "../components/loading-image/loading-image";
 
 const ViewproductView = () => {
-    const searchParams = useSearchParams()
-    const id = searchParams.get('id')
+    const searchParams = useSearchParams();
+    const id = searchParams.get('id');
 
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(true);
     const [productView, setProductView] = useState({
         producto: {
             nombre: '',
@@ -25,26 +25,35 @@ const ViewproductView = () => {
             cantidad: 0,
             estado_stock: ''
         }
-    })
+    });
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setLoading(false)
-        }, 2000)
-        return () => clearTimeout(timer)
-    }, [])
+            setLoading(false);
+        }, 2000);
+        return () => clearTimeout(timer);
+    }, []);
 
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const res = await axios.get(`http://localhost:8000/productos/${id}`)
-                setProductView(res.data)
+                const res = await axios.get(`http://localhost:8000/productos/${id}`);
+                setProductView(res.data);
             } catch (error) {
-                console.error("Error fetching the product:", error)
+                console.error("Error fetching the product:", error);
             }
         }
-        fetchProduct()
-    }, [id])
+        fetchProduct();
+    }, [id]);
+
+    const handleAddToCart = () => {
+        const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+        if (!cartItems.includes(id)) {
+            cartItems.push(id);
+        }
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        alert("Producto añadido al carrito");
+    };
 
     return (
         <main className="select-none text-black">
@@ -55,7 +64,7 @@ const ViewproductView = () => {
                     ) : (
                         <Image
                             draggable={'false'}
-                            src={"http://localhost:8000/"+productView.producto.imagen || '/default-image.png'}
+                            src={"http://localhost:8000/" + productView.producto.imagen || '/default-image.png'}
                             alt={productView.producto.nombre}
                             width={500}
                             height={500}
@@ -66,7 +75,11 @@ const ViewproductView = () => {
                     <h1 className="text-3xl font-bold-700 select-none">{productView.producto.nombre}</h1>
                     <h1>${productView.producto.precio_unitario}</h1>
                     <div className="flex flex-col gap-4 lg:justify-start lg:flex-row">
-                        <button className="bg-blue-800 transition duration-300 ease-in-out h-10 hover:bg-blue-700 w-full lg:w-64 text-white" type="submit">
+                        <button
+                            className="bg-blue-800 transition duration-300 ease-in-out h-10 hover:bg-blue-700 w-full lg:w-64 text-white"
+                            type="button"
+                            onClick={handleAddToCart}
+                        >
                             Añadir al carrito
                         </button>
                     </div>
@@ -86,7 +99,7 @@ const ViewproductView = () => {
                 </div>
             </div>
         </main>
-    )
+    );
 }
 
-export default ViewproductView
+export default ViewproductView;
