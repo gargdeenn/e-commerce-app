@@ -1,20 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Bar, Pie, Line } from 'react-chartjs-2';
 import {
   Box,
   Grid,
   Paper,
+  TextField,
+  Typography,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  TablePagination,
-  TextField,
-  Typography
+  TablePagination
 } from '@mui/material';
 import {
   Chart as ChartJS,
@@ -57,43 +58,75 @@ export default function Dashboard() {
   const [rowsPerPageNomina, setRowsPerPageNomina] = useState(5);
   const [searchNomina, setSearchNomina] = useState('');
 
-  const postulantesPorMes = {
-    labels: [
-      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-    ],
-    datasets: [
-      {
-        label: 'Número de Postulantes',
-        data: [12, 19, 3, 5, 2, 3, 10, 8, 12, 15, 10, 7],
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1
-      }
-    ]
-  };
+  const [postulantesPorMes, setPostulantesPorMes] = useState({
+    labels: [],
+    datasets: []
+  });
 
-  const categoriasProductos = {
-    labels: ['Hogar', 'Electrónica', 'Moda', 'Juguetes', 'Deportes'],
+  const [gananciasMensuales, setGananciasMensuales] = useState({
+    labels: [],
+    datasets: []
+  });
+
+  const [categoriasProductos, setCategoriasProductos] = useState({
+    labels: [],
     datasets: [
       {
-        data: [300, 50, 100, 40, 120],
-        backgroundColor: [
-          '#FF6384',
-          '#36A2EB',
-          '#FFCE56',
-          '#FF6384',
-          '#36A2EB'
-        ],
-        hoverBackgroundColor: [
-          '#FF6384',
-          '#36A2EB',
-          '#FFCE56',
-          '#FF6384',
-          '#36A2EB'
-        ]
+        data: [],
+        backgroundColor: [],
+        hoverBackgroundColor: []
       }
     ]
-  };
+  });
+
+  useEffect(() => {
+    const fetchPostulantes = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/dashboard/');
+        setPostulantesPorMes(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    const fetchGanancias = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/dashboard/lineal/');
+        setGananciasMensuales(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    const fetchCategoriasProductos = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/dashboard/circular/');
+        const categoriasData = response.data;
+
+        const labels = categoriasData.map(item => item.categoria);
+        const data = categoriasData.map(item => item.total_vendido);
+        const backgroundColor = ['#FF6384', '#36A2EB', '#FFCE56'];
+        const hoverBackgroundColor = ['#FF6384', '#36A2EB', '#FFCE56'];
+
+        setCategoriasProductos({
+          labels,
+          datasets: [
+            {
+              data,
+              backgroundColor,
+              hoverBackgroundColor
+            }
+          ]
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchPostulantes();
+    fetchGanancias();
+    fetchCategoriasProductos();
+  }, []);
 
   const productosMasVendidos = {
     labels: [
@@ -102,32 +135,17 @@ export default function Dashboard() {
     datasets: [
       {
         label: 'Producto A',
-        data: [65, 59, 80, 81, 56, 55, 40, 42, 58, 64, 55, 40],
+        data: [0, 0, 0, 0, 0, 55, 0, 0, 0, 0, 0, 0],
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 1
       },
       {
         label: 'Producto B',
-        data: [28, 48, 40, 19, 86, 27, 90, 84, 40, 50, 35, 20],
+        data: [0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 0],
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
         borderColor: 'rgba(54, 162, 235, 1)',
         borderWidth: 1
-      }
-    ]
-  };
-
-  const gananciasMensuales = {
-    labels: [
-      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-    ],
-    datasets: [
-      {
-        label: 'Ganancias',
-        data: [1200, 1900, 3000, 5000, 2000, 3000, 4000, 4500, 3000, 2000, 1500, 1200],
-        fill: false,
-        backgroundColor: 'rgba(75,192,192,0.4)',
-        borderColor: 'rgba(75,192,192,1)'
       }
     ]
   };
@@ -223,6 +241,14 @@ export default function Dashboard() {
             <Grid item xs={12} md={6}>
               <Paper sx={{ p: 2 }}>
                 <Typography variant="h6" gutterBottom>
+                  Ganancias Mensuales
+                </Typography>
+                <Bar data={gananciasMensuales} options={{ responsive: true }} />
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Paper sx={{ p: 2 }}>
+                <Typography variant="h6" gutterBottom>
                   Categorías de Productos
                 </Typography>
                 <Box sx={{ height: '300px' }}>
@@ -236,14 +262,6 @@ export default function Dashboard() {
                   Productos Más Vendidos
                 </Typography>
                 <Bar data={productosMasVendidos} options={{ responsive: true }} />
-              </Paper>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Paper sx={{ p: 2 }}>
-                <Typography variant="h6" gutterBottom>
-                  Ganancias Mensuales
-                </Typography>
-                <Line data={gananciasMensuales} options={{ responsive: true }} />
               </Paper>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -333,49 +351,6 @@ export default function Dashboard() {
                   page={pageReponer}
                   onPageChange={handleChangePageReponer}
                   onRowsPerPageChange={handleChangeRowsPerPageReponer}
-                />
-              </Paper>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Paper sx={{ p: 2 }}>
-                <Typography variant="h6" gutterBottom>
-                  Nómina de Empleados
-                </Typography>
-                <TextField
-                  label="Buscar"
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                  onChange={handleSearchNomina}
-                />
-                <TableContainer>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Nombre</TableCell>
-                        <TableCell>Nómina</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {filteredNomina
-                        .slice(pageNomina * rowsPerPageNomina, pageNomina * rowsPerPageNomina + rowsPerPageNomina)
-                        .map((empleado) => (
-                          <TableRow key={empleado.nombre}>
-                            <TableCell>{empleado.nombre}</TableCell>
-                            <TableCell>${empleado.nomina}</TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={filteredNomina.length}
-                  rowsPerPage={rowsPerPageNomina}
-                  page={pageNomina}
-                  onPageChange={handleChangePageNomina}
-                  onRowsPerPageChange={handleChangeRowsPerPageNomina}
                 />
               </Paper>
             </Grid>

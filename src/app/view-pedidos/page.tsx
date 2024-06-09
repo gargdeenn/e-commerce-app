@@ -40,7 +40,7 @@ export default function MisPedidos() {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
       formDataObj.append('email', user.email);
       if (user.email) {
-        const res = await axios.post(`http://localhost:8000/pedidos/search`, formDataObj);
+        const res = await axios.post(`http://localhost:8000/pedidos/search/`, formDataObj);
         setPedidos(res.data);
       }
     };
@@ -85,7 +85,6 @@ export default function MisPedidos() {
                         <TableCell>Estado</TableCell>
                         <TableCell>Total</TableCell>
                         <TableCell>Detalles</TableCell>
-                        {/* <TableCell>Acción</TableCell> */}
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -107,15 +106,6 @@ export default function MisPedidos() {
                               ))}
                             </div>
                           </TableCell>
-                          {/* <TableCell>
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              onClick={() => handleCancelPedido(index)}
-                            >
-                              Cancelar Pedido
-                            </Button>
-                          </TableCell> */}
                         </TableRow>
                       ))}
                     </TableBody>

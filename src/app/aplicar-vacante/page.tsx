@@ -62,7 +62,7 @@ export default function AddJobApplication() {
                 }
             });
 
-            if (response.status === 200) {
+            if (response.status === 201) {
                 router.push('/')
                 // router.push('/success-page'); // Redirigir a una página de éxito
             } else {

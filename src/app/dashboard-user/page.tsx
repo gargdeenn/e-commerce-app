@@ -14,11 +14,17 @@ interface Producto {
   cantidad: number;
 }
 
+interface Categoria {
+  categoria: string;
+  total_vendido: number;
+}
+
 export default function PedidoDashboard() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [search, setSearch] = useState('');
   const [productos, setProductos] = useState<Producto[]>([]);
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
   const router = useRouter(); // Inicializar el router para la navegación
 
   useEffect(() => {
@@ -30,7 +36,18 @@ export default function PedidoDashboard() {
       }));
       setProductos(fetchedProductos);
     };
+
+    const fetchCategorias = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/categorias-total-vendido');
+        setCategorias(response.data);
+      } catch (error) {
+        console.error('Error al obtener las categorías:', error);
+      }
+    };
+
     fetchCartItems();
+    fetchCategorias();
   }, []);
 
   const handleChangePage = (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -179,11 +196,29 @@ export default function PedidoDashboard() {
               </Paper>
               <Paper sx={{ p: 2, mt: 3 }}>
                 <Typography variant="h6" gutterBottom>
-                  Ver Mis Pedidos
+                  Categorías y Ventas Totales
                 </Typography>
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Categoría</TableCell>
+                        <TableCell>Total Vendido</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {categorias.map((categoria) => (
+                        <TableRow key={categoria.categoria}>
+                          <TableCell>{categoria.categoria}</TableCell>
+                          <TableCell>${categoria.total_vendido}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
                 <Box sx={{ textAlign: 'center', mt: 3 }}>
                   <Button variant="contained" color="secondary" size="large" onClick={handleViewPedidos}>
-                    Ir
+                    Ver Mis Pedidos
                   </Button>
                 </Box>
               </Paper>

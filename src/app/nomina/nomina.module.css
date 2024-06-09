@@ -1,0 +1,12 @@
+.enviar {
+  background-color: white;
+  border: 1px solid blue;
+  color: blue;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.enviar:hover {
+  background-color: #ACB1C0;
+}
