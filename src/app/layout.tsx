@@ -28,7 +28,7 @@ export default function RootLayout({
   }, []);
 
   const pathname = usePathname()
-  const pageNotNavbar = pathname === '/login' || pathname === '/sign-up' || pathname === '/dashboard' || pathname === '/dashboard/add-employed' || pathname === '/dashboard/add-product' || pathname === '/dashboard/add-offer' || pathname === '/dashboard/add-product' || pathname === '/dashboard/add-offer' || pathname === '/dashboard/add-product' || pathname === '/fashion' || pathname === '/toys' || pathname === '/sports' || pathname === '/hogar' || pathname === '/electronic' || pathname === '/dashboard/view-postulados' || pathname === '/dashboard/view-empleado' || pathname === '/dashboard/view-nomina' || pathname === '/nomina'
+  const pageNotNavbar = pathname === '/login' || pathname === '/sign-up' || pathname === '/dashboard' || pathname === '/dashboard/add-employed' || pathname === '/dashboard/add-product' || pathname === '/dashboard/add-offer' || pathname === '/dashboard/add-product' || pathname === '/dashboard/add-offer' || pathname === '/dashboard/add-product' || pathname === '/fashion' || pathname === '/toys' || pathname === '/sports' || pathname === '/hogar' || pathname === '/electronic' || pathname === '/dashboard/view-postulados' || pathname === '/dashboard/view-empleado' || pathname === '/dashboard/view-nomina' || pathname === '/nomina' || pathname === '/dashboard/view-product'
   const pageNotFooter = pathname === '/dashboard' 
   
   return (

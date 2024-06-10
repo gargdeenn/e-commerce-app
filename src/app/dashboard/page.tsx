@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import axios from 'axios';
-import { Bar, Pie, Line } from 'react-chartjs-2';
+import { Bar, Pie } from 'react-chartjs-2';
 import {
   Box,
   Grid,
@@ -23,8 +23,6 @@ import {
   LinearScale,
   BarElement,
   ArcElement,
-  LineElement,
-  PointElement,
   Title,
   Tooltip,
   Legend
@@ -35,8 +33,6 @@ ChartJS.register(
   LinearScale,
   BarElement,
   ArcElement,
-  LineElement,
-  PointElement,
   Title,
   Tooltip,
   Legend
@@ -54,10 +50,6 @@ export default function Dashboard() {
   const [rowsPerPageReponer, setRowsPerPageReponer] = useState(5);
   const [searchReponer, setSearchReponer] = useState('');
 
-  const [pageNomina, setPageNomina] = useState(0);
-  const [rowsPerPageNomina, setRowsPerPageNomina] = useState(5);
-  const [searchNomina, setSearchNomina] = useState('');
-
   const [postulantesPorMes, setPostulantesPorMes] = useState({
     labels: [],
     datasets: []
@@ -66,6 +58,11 @@ export default function Dashboard() {
   const [gananciasMensuales, setGananciasMensuales] = useState({
     labels: [],
     datasets: []
+  });
+  
+  const [ProductosMasBuscados, setProductosMasBuscados] = useState({
+    terms: '',
+    count: 0
   });
 
   const [categoriasProductos, setCategoriasProductos] = useState({
@@ -78,6 +75,23 @@ export default function Dashboard() {
       }
     ]
   });
+
+  const [productosMasVendidos, setProductosMasVendidos] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: 'Productos Más Vendidos',
+        data: [],
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
+      }
+    ]
+  });
+
+  const [totalGananciasMesActual, setTotalGananciasMesActual] = useState(0);
+  const [totalGananciasMesActualEnd, setTotalGananciasMesActualEnd] = useState(0);
+  const [totalGananciasAnoActual, setTotalGananciasAnoActual] = useState(0);  // This should ideally be fetched from the backend too
 
   useEffect(() => {
     const fetchPostulantes = async () => {
@@ -92,7 +106,16 @@ export default function Dashboard() {
     const fetchGanancias = async () => {
       try {
         const response = await axios.get('http://localhost:8000/dashboard/lineal/');
+        const data = response.data;
         setGananciasMensuales(response.data);
+        const gananciasMensuales = data.datasets[0].data;
+        const mesActual = new Date().getMonth();
+        const gananciasMesActual = gananciasMensuales[mesActual];
+        console.log(`Ganancias del mes actual (${data.labels[mesActual]}): ${gananciasMesActual}`);
+        const totalGananciasAnuales = gananciasMensuales.reduce((total, ganancia) => total + ganancia, 0);
+        console.log(`Total de ganancias anuales: ${totalGananciasAnuales}`);
+        setTotalGananciasMesActualEnd(gananciasMesActual);
+        setTotalGananciasAnoActual(totalGananciasAnuales);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -123,32 +146,69 @@ export default function Dashboard() {
       }
     };
 
+    const fetchProductosMasVendidos = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/dashboard/barras/');
+        const productosData = response.data;
+        const meses = [
+          'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+        ];
+        const dataPorMes = Array(12).fill(0); // Inicializar un array de 12 elementos en 0
+
+        productosData.forEach(item => {
+          dataPorMes[item.mes - 1] = item.cantidad_maxima; // Asignar la cantidad en el mes correspondiente
+        });
+
+        setProductosMasVendidos({
+          labels: meses,
+          datasets: [
+            {
+              label: productosData[0].nombre_producto,
+              data: dataPorMes,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            }
+          ]
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    const fetchGananciasActuales = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/dashboard/ganancias-actuales/');
+        const gananciasData = response.data;
+        setTotalGananciasMesActual(gananciasData.mes_actual);
+        setTotalGananciasAnoActual(gananciasData.ano_actual);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    const fetchProductosMasBuscados = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/dashboard/terms/');
+        setProductosMasBuscados({
+          terms: response.data.term,
+          count: response.data.count
+        });
+        for (let index = 0; index < response.data.length; index++) {
+          console.log(response.data[index])//aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
     fetchPostulantes();
     fetchGanancias();
     fetchCategoriasProductos();
+    fetchProductosMasVendidos();
+    fetchGananciasActuales();
+    fetchProductosMasBuscados();
   }, []);
-
-  const productosMasVendidos = {
-    labels: [
-      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-    ],
-    datasets: [
-      {
-        label: 'Producto A',
-        data: [0, 0, 0, 0, 0, 55, 0, 0, 0, 0, 0, 0],
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1
-      },
-      {
-        label: 'Producto B',
-        data: [0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 0],
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1
-      }
-    ]
-  };
 
   const productosMasBuscados = [
     { nombre: 'Producto 1', vecesBuscado: 50 },
@@ -164,52 +224,30 @@ export default function Dashboard() {
     { nombre: 'Producto 3', cantidadTotal: 200, cantidadVendida: 180, totalReponer: 20 }
   ];
 
-  const empleadosNomina = [
-    { nombre: 'Empleado 1', nomina: 3000 },
-    { nombre: 'Empleado 2', nomina: 2500 },
-    { nombre: 'Empleado 3', nomina: 2000 }
-  ];
-
-  const totalGananciasMesActual = 1200;
-  const totalGananciasAnoActual = 36000;
-
-  const handleChangePageBuscados = (event, newPage) => {
+  const handleChangePageBuscados = (newPage: number) => {
     setPageBuscados(newPage);
   };
 
-  const handleChangeRowsPerPageBuscados = (event) => {
+  const handleChangeRowsPerPageBuscados = (event: ChangeEvent<HTMLInputElement>) => {
     setRowsPerPageBuscados(parseInt(event.target.value, 10));
     setPageBuscados(0);
   };
 
-  const handleSearchBuscados = (event) => {
+  const handleSearchBuscados = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchBuscados(event.target.value);
   };
 
-  const handleChangePageReponer = (event, newPage) => {
+  const handleChangePageReponer = (newPage: number) => {
     setPageReponer(newPage);
   };
 
-  const handleChangeRowsPerPageReponer = (event) => {
+  const handleChangeRowsPerPageReponer = (event: ChangeEvent<HTMLInputElement>) => {
     setRowsPerPageReponer(parseInt(event.target.value, 10));
     setPageReponer(0);
   };
 
-  const handleSearchReponer = (event) => {
+  const handleSearchReponer = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchReponer(event.target.value);
-  };
-
-  const handleChangePageNomina = (event, newPage) => {
-    setPageNomina(newPage);
-  };
-
-  const handleChangeRowsPerPageNomina = (event) => {
-    setRowsPerPageNomina(parseInt(event.target.value, 10));
-    setPageNomina(0);
-  };
-
-  const handleSearchNomina = (event) => {
-    setSearchNomina(event.target.value);
   };
 
   const filteredBuscados = productosMasBuscados.filter((producto) =>
@@ -218,10 +256,6 @@ export default function Dashboard() {
 
   const filteredReponer = productosPorReponer.filter((producto) =>
     producto.nombre.toLowerCase().includes(searchReponer.toLowerCase())
-  );
-
-  const filteredNomina = empleadosNomina.filter((empleado) =>
-    empleado.nombre.toLowerCase().includes(searchNomina.toLowerCase())
   );
 
   return (
@@ -289,8 +323,8 @@ export default function Dashboard() {
                         .slice(pageBuscados * rowsPerPageBuscados, pageBuscados * rowsPerPageBuscados + rowsPerPageBuscados)
                         .map((producto) => (
                           <TableRow key={producto.nombre}>
-                            <TableCell>{producto.nombre}</TableCell>
-                            <TableCell>{producto.vecesBuscado}</TableCell>
+                            <TableCell>{ProductosMasBuscados.terms}</TableCell>
+                            <TableCell>{ProductosMasBuscados.count}</TableCell>
                           </TableRow>
                         ))}
                     </TableBody>
@@ -360,7 +394,7 @@ export default function Dashboard() {
                   Resumen de Ganancias
                 </Typography>
                 <Typography variant="body1">Ganancias del Mes Actual</Typography>
-                <Typography variant="h4">${totalGananciasMesActual}</Typography>
+                <Typography variant="h4">${totalGananciasMesActualEnd}</Typography>
                 <Typography variant="body1">Ganancias del Año</Typography>
                 <Typography variant="h4">${totalGananciasAnoActual}</Typography>
               </Paper>

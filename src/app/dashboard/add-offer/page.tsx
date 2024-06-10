@@ -41,7 +41,7 @@ export default function AddJobOffer() {
         }
         try {
             const response = await axios.post('http://localhost:8000/vacante/', vacante);
-            if (response.status === 200) {
+            if (response.status === 201) {
                 console.log('Oferta de empleo agregada exitosamente');
                 router.push('/dashboard');
             } else {

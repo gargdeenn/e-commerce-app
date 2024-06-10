@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Image from 'next/image'
 
-export default function ProductsComponent({ cantidadProductos = 5000, searchTerm = '', itemsPerPage = 10 }) {
+export default function ProductsAllSearchComponent({ cantidadProductos = 5000, searchTerm = '', itemsPerPage = 10 }) {
     const viewProducts = (id) => {
         window.location.href = `/view-product?id=${id}`
     }

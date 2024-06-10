@@ -104,10 +104,10 @@ export default function NavbarAdmin(){
                     <DrawerEmployees toggleDrawer={toggleDrawerEmployees} isOpen={isOpenEmployees} name={"Empleados"}>
                         <ul className="mt-8 select-none flex flex-col items-center gap-y-6">
                             <li>
-                                <a className="transition duration-300 ease-in-out hover:text-gray-400" href="http://localhost:3000/nomina">Ver empleados</a>
+                                <a className="transition duration-300 ease-in-out hover:text-gray-400" href="/nomina">Ver empleados</a>
                             </li>
                             <li>
-                                <a className="transition duration-300 ease-in-out hover:text-gray-400" href={"http://localhost:3000/dashboard/add-employed"}>Ingresar empleados</a>
+                                <a className="transition duration-300 ease-in-out hover:text-gray-400" href={"/dashboard/add-employed"}>Ingresar empleados</a>
                             </li>
                         </ul>
                     </DrawerEmployees>
@@ -124,7 +124,10 @@ export default function NavbarAdmin(){
                     <DrawerProducts toggleDrawer={toggleDrawerProducts} isOpen={isOpenProducts} name={"Productos"}>
                         <ul className="mt-8 select-none flex flex-col items-center gap-y-6">
                             <li>
-                                <a className="transition duration-300 ease-in-out hover:text-gray-400" href={"http://localhost:3000/dashboard/add-product"}>Ingresar productos</a>
+                                <a className="transition duration-300 ease-in-out hover:text-gray-400" href={"/dashboard/view-product"}>Ver productos</a>
+                            </li>
+                            <li>
+                                <a className="transition duration-300 ease-in-out hover:text-gray-400" href={"/dashboard/add-product"}>Ingresar productos</a>
                             </li>
                         </ul>
                     </DrawerProducts>
@@ -135,16 +138,16 @@ export default function NavbarAdmin(){
                 <li className="mb-4 lg:mb-0 lg:pe-2">
                 
                     <a className="text-black/60 select-none cursor-pointer transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2 disabled:opacity-50 disabled:pointer-events-none" onClick={toggleDrawerOferts}>
-                        Ofertas
+                        Vacantes
                         </a>
 
                     <DrawerOferts toggleDrawer={toggleDrawerOferts} isOpen={isOpenOferts} name={"Ofertas"}>
                         <ul className="mt-8 select-none flex flex-col items-center gap-y-6">
                             <li>
-                                <a className="transition duration-300 ease-in-out hover:text-gray-400" href="http://localhost:3000/dashboard/view-postulados">Ver postulados</a>
+                                <a className="transition duration-300 ease-in-out hover:text-gray-400" href="/dashboard/view-postulados">Ver postulados</a>
                             </li>
                             <li>
-                                <a className="transition duration-300 ease-in-out hover:text-gray-400" href={"http://localhost:3000/dashboard/add-offer"}>Registrar vacantes</a>
+                                <a className="transition duration-300 ease-in-out hover:text-gray-400" href={"/dashboard/add-offer"}>Registrar vacantes</a>
                             </li>
                         </ul>
                     </DrawerOferts>
