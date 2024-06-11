@@ -71,17 +71,17 @@ export default function NavbarAdmin(){
             className="!visible hidden flex-grow basis-[100%] items-center lg:!flex lg:basis-auto"
             id="navbarSupportedContent1"
             data-twe-collapse-item>
-            <a
-                className="mb-4 me-5 ms-2 mt-3 flex items-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:mb-0 lg:mt-0"
-                href={'/dashboard'}>
-                <Image
-                src={'/favicon.ico'}
-                height={25}
-                width={25}
-                alt="TE Logo"
-                loading="lazy" />
+            <div
+            className="!visible hidden flex-grow basis-[100%] items-center lg:!flex lg:basis-auto"
+            id="navbarSupportedContent1"
+            data-twe-collapse-item>
+                <a
+                    className="mb-4 me-5 ms-2 mt-3 flex items-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:mb-0 lg:mt-0"
+                    href={'/'}>
+                    Home
 
-            </a>
+                </a>
+            </div>
             
             <ul
                 className="list-style-none me-auto flex flex-col ps-0 lg:flex-row"
@@ -104,10 +104,13 @@ export default function NavbarAdmin(){
                     <DrawerEmployees toggleDrawer={toggleDrawerEmployees} isOpen={isOpenEmployees} name={"Empleados"}>
                         <ul className="mt-8 select-none flex flex-col items-center gap-y-6">
                             <li>
+                                <a className="transition duration-300 ease-in-out hover:text-gray-400" href={"/dashboard/add-employed"}>Ingresar empleados</a>
+                            </li>
+                            <li>
                                 <a className="transition duration-300 ease-in-out hover:text-gray-400" href="/nomina">Ver empleados</a>
                             </li>
                             <li>
-                                <a className="transition duration-300 ease-in-out hover:text-gray-400" href={"/dashboard/add-employed"}>Ingresar empleados</a>
+                                <a className="transition duration-300 ease-in-out hover:text-gray-400" href="/despedir/view-despedidos">Ver empleados despedidos</a>
                             </li>
                         </ul>
                     </DrawerEmployees>
@@ -157,17 +160,7 @@ export default function NavbarAdmin(){
             
             </div>
             <div className="relative flex items-center">
-            <a className="me-4 text-neutral-600 dark:text-white" href="#">
-                <span className="[&>svg]:w-5">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor">
-                    <path
-                    d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" />
-                </svg>
-                </span>
-            </a>
+            
 
             
             {/* <div

@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import StyleNavbar from './navbar.module.css';
@@ -12,10 +12,12 @@ export default function Navbar() {
     const [suggestions, setSuggestions] = useState([]);
     const [searchHistory, setSearchHistory] = useState([]);
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const toggleDropdownOtros = () => {
         setIsDropdownVisible(!isDropdownVisible);
     };
+
     useEffect(() => {
         async function fetchSearchHistory() {
             try {
@@ -27,11 +29,20 @@ export default function Navbar() {
         }
 
         fetchSearchHistory();
+
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            setIsAuthenticated(true);
+        }
     }, []);
 
     function closeSession() {
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
+        setIsAuthenticated(false);
+        router.push('/login');
+    }
+    function login() {
         router.push('/login');
     }
 
@@ -39,7 +50,7 @@ export default function Navbar() {
         setIsOpen(!isOpen);
     };
 
-    const handleSearchChange = async (event) => {
+    const handleSearchChange = async (event: ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setSearchTerm(value);
 
@@ -55,7 +66,7 @@ export default function Navbar() {
         }
     };
 
-    const handleSearchSubmit = async (event) => {
+    const handleSearchSubmit = async (event: ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         if (searchTerm) {
             try {
@@ -67,8 +78,8 @@ export default function Navbar() {
         }
     };
 
-    const handleSuggestionClick = async (suggestion) => {
-        setSearchTerm(suggestion);
+    const handleSuggestionClick = async (suggestion: unknown) => {
+        setSearchTerm(suggestion as string);
         setSuggestions([]);
         try {
             await axios.post('http://localhost:8000/productos/register-search', { term: suggestion });
@@ -78,7 +89,7 @@ export default function Navbar() {
         }
     };
 
-    const handleProductClick = (id) => {
+    const handleProductClick = (id: unknown) => {
         if (Number.isInteger(id)) {
             router.push(`/producto/${id}`);
         } else {
@@ -144,7 +155,7 @@ export default function Navbar() {
 
                         <li className="mb-4 lg:mb-0 lg:pe-2" data-twe-nav-item-ref>
                             <div className="dropdown">
-                                <button className="dropdown-toggle" onClick={toggleDropdownOtros}>
+                                <button className="dropdown-toggle text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2" onClick={toggleDropdownOtros}>
                                     Otros
                                 </button>
                                 {isDropdownVisible && (
@@ -189,9 +200,9 @@ export default function Navbar() {
                         )}
                     </form>
                 </div>
-                        
+                    
                 <div className="relative flex items-center">
-                    <a className="me-4 text-neutral-600 dark:text-white" href="/dashboard-user">
+                    <a className="text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2" href={"/dashboard-user"}>
                         <span className="[&>svg]:w-5">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -203,23 +214,17 @@ export default function Navbar() {
                         </span>
                     </a>
 
-                    <div className="relative flex items-center">
-                        <a className="me-4 text-neutral-600 dark:text-white" href="login">
-                            <span className="[&>svg]:w-5">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="currentColor">
-                                <path
-                                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 1.5c-2.67 0-8 1.34-8 4v1.5c0 .83.67 1.5 1.5 1.5h13c.83 0 1.5-.67 1.5-1.5V17.5c0-2.66-5.33-4-8-4z" />
-                                </svg>
-                            </span>
-                        </a>
-
-                        <button className={StyleNavbar.remove} onClick={closeSession}>
+                    {isAuthenticated ? (
+                        <button className="text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2" onClick={closeSession}>
                             Cerrar sesión
                         </button>
-                    </div>
+                    ) : (
+                        <a className="text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2" onClick={login}>
+                            <button>
+                                Login
+                            </button>
+                        </a>
+                    )}
                 </div>
             </div>
         </nav>

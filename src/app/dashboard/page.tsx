@@ -1,5 +1,4 @@
-'use client';
-
+'use client'
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import axios from 'axios';
 import { Bar, Pie } from 'react-chartjs-2';
@@ -60,10 +59,7 @@ export default function Dashboard() {
     datasets: []
   });
   
-  const [ProductosMasBuscados, setProductosMasBuscados] = useState({
-    terms: '',
-    count: 0
-  });
+  const [ProductosMasBuscados, setProductosMasBuscados] = useState([]);
 
   const [categoriasProductos, setCategoriasProductos] = useState({
     labels: [],
@@ -91,7 +87,7 @@ export default function Dashboard() {
 
   const [totalGananciasMesActual, setTotalGananciasMesActual] = useState(0);
   const [totalGananciasMesActualEnd, setTotalGananciasMesActualEnd] = useState(0);
-  const [totalGananciasAnoActual, setTotalGananciasAnoActual] = useState(0);  // This should ideally be fetched from the backend too
+  const [totalGananciasAnoActual, setTotalGananciasAnoActual] = useState(0);
 
   useEffect(() => {
     const fetchPostulantes = async () => {
@@ -153,10 +149,10 @@ export default function Dashboard() {
         const meses = [
           'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
         ];
-        const dataPorMes = Array(12).fill(0); // Inicializar un array de 12 elementos en 0
+        const dataPorMes = Array(12).fill(0);
 
         productosData.forEach(item => {
-          dataPorMes[item.mes - 1] = item.cantidad_maxima; // Asignar la cantidad en el mes correspondiente
+          dataPorMes[item.mes - 1] = item.cantidad_maxima;
         });
 
         setProductosMasVendidos({
@@ -190,13 +186,7 @@ export default function Dashboard() {
     const fetchProductosMasBuscados = async () => {
       try {
         const response = await axios.get('http://localhost:8000/dashboard/terms/');
-        setProductosMasBuscados({
-          terms: response.data.term,
-          count: response.data.count
-        });
-        for (let index = 0; index < response.data.length; index++) {
-          console.log(response.data[index])//aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-        }
+        setProductosMasBuscados(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -209,20 +199,6 @@ export default function Dashboard() {
     fetchGananciasActuales();
     fetchProductosMasBuscados();
   }, []);
-
-  const productosMasBuscados = [
-    { nombre: 'Producto 1', vecesBuscado: 50 },
-    { nombre: 'Producto 2', vecesBuscado: 40 },
-    { nombre: 'Producto 3', vecesBuscado: 30 },
-    { nombre: 'Producto 4', vecesBuscado: 20 },
-    { nombre: 'Producto 5', vecesBuscado: 10 }
-  ];
-
-  const productosPorReponer = [
-    { nombre: 'Producto 1', cantidadTotal: 100, cantidadVendida: 90, totalReponer: 10 },
-    { nombre: 'Producto 2', cantidadTotal: 150, cantidadVendida: 140, totalReponer: 10 },
-    { nombre: 'Producto 3', cantidadTotal: 200, cantidadVendida: 180, totalReponer: 20 }
-  ];
 
   const handleChangePageBuscados = (newPage: number) => {
     setPageBuscados(newPage);
@@ -250,9 +226,15 @@ export default function Dashboard() {
     setSearchReponer(event.target.value);
   };
 
-  const filteredBuscados = productosMasBuscados.filter((producto) =>
-    producto.nombre.toLowerCase().includes(searchBuscados.toLowerCase())
+  const filteredBuscados = ProductosMasBuscados.filter((producto) =>
+    producto.term.toLowerCase().includes(searchBuscados.toLowerCase())
   );
+
+  const productosPorReponer = [
+    { nombre: 'Producto 1', cantidadTotal: 100, cantidadVendida: 90, totalReponer: 10 },
+    { nombre: 'Producto 2', cantidadTotal: 150, cantidadVendida: 140, totalReponer: 10 },
+    { nombre: 'Producto 3', cantidadTotal: 200, cantidadVendida: 180, totalReponer: 20 }
+  ];
 
   const filteredReponer = productosPorReponer.filter((producto) =>
     producto.nombre.toLowerCase().includes(searchReponer.toLowerCase())
@@ -322,9 +304,9 @@ export default function Dashboard() {
                       {filteredBuscados
                         .slice(pageBuscados * rowsPerPageBuscados, pageBuscados * rowsPerPageBuscados + rowsPerPageBuscados)
                         .map((producto) => (
-                          <TableRow key={producto.nombre}>
-                            <TableCell>{ProductosMasBuscados.terms}</TableCell>
-                            <TableCell>{ProductosMasBuscados.count}</TableCell>
+                          <TableRow key={producto.term}>
+                            <TableCell>{producto.term}</TableCell>
+                            <TableCell>{producto.count}</TableCell>
                           </TableRow>
                         ))}
                     </TableBody>
@@ -336,55 +318,8 @@ export default function Dashboard() {
                   count={filteredBuscados.length}
                   rowsPerPage={rowsPerPageBuscados}
                   page={pageBuscados}
-                  onPageChange={handleChangePageBuscados}
+                  onPageChange={(event, newPage) => handleChangePageBuscados(newPage)}
                   onRowsPerPageChange={handleChangeRowsPerPageBuscados}
-                />
-              </Paper>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Paper sx={{ p: 2 }}>
-                <Typography variant="h6" gutterBottom>
-                  Productos por Reponer
-                </Typography>
-                <TextField
-                  label="Buscar"
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                  onChange={handleSearchReponer}
-                />
-                <TableContainer>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Nombre</TableCell>
-                        <TableCell>Cantidad Total</TableCell>
-                        <TableCell>Cantidad Vendida</TableCell>
-                        <TableCell>Total a Reponer</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {filteredReponer
-                        .slice(pageReponer * rowsPerPageReponer, pageReponer * rowsPerPageReponer + rowsPerPageReponer)
-                        .map((producto) => (
-                          <TableRow key={producto.nombre}>
-                            <TableCell>{producto.nombre}</TableCell>
-                            <TableCell>{producto.cantidadTotal}</TableCell>
-                            <TableCell>{producto.cantidadVendida}</TableCell>
-                            <TableCell>{producto.totalReponer}</TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={filteredReponer.length}
-                  rowsPerPage={rowsPerPageReponer}
-                  page={pageReponer}
-                  onPageChange={handleChangePageReponer}
-                  onRowsPerPageChange={handleChangeRowsPerPageReponer}
                 />
               </Paper>
             </Grid>

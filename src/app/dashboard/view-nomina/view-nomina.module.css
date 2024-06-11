@@ -1,15 +1,16 @@
-.enviar {
+.done {
   background-color: white;
-  border: 1px solid blue;
-  color: blue;
+  border: 1px solid green;
+  color: green;
   padding: 5px 10px;
   cursor: pointer;
   border-radius: 4px;
 }
 
-.enviar:hover {
-  background-color: #ACB1C0;
+.done:hover {
+  background-color: #57A311;
 }
+
 .remove {
   background-color: white;
   border: 1px solid red;

@@ -73,7 +73,7 @@ export default function VerEmpleados() {
   };
 
   const handleDespedirEmpleado = (id_user: number) => {
-    router.push(`/despedir/${id_user}`);
+    window.location.href = `/despedir?id=${id_user}`;
   };
 
 
@@ -98,7 +98,8 @@ export default function VerEmpleados() {
                         <TableCell>Teléfono</TableCell>
                         <TableCell>Cédula</TableCell>
                         <TableCell>Cargo</TableCell>
-                        <TableCell>Acciones</TableCell>
+                        <TableCell>Nómina</TableCell>
+                        <TableCell>Despedir</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -112,6 +113,11 @@ export default function VerEmpleados() {
                           <TableCell>
                             <button className={StyleDashboard.enviar} onClick={() => handleVerNomina(empleado.id)}>
                               Ver Nómina
+                            </button>
+                          </TableCell>
+                          <TableCell>
+                            <button className={StyleDashboard.remove} onClick={() => handleDespedirEmpleado(empleado.id)}>
+                              Ascender a cliente
                             </button>
                           </TableCell>
                         </TableRow>

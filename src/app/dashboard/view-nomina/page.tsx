@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import Guard from '@/app/components/guards/Guard';
 import NavbarAdmin from '../../components/navbar/navbar-admin';
-
+import StyleNomina from './view-nomina.module.css'
 export interface Nomina {
     id: number;
     fecha_pago: string;
@@ -83,6 +83,7 @@ export default function ViewNomina() {
         try {
             const res = await axios.post('http://localhost:8000/nomina/', payload);
             alert('Nómina creada:', res.data);
+            window.location.reload();
         } catch (error) {
             alert('Error al crear la nómina:', error);
         }
@@ -113,6 +114,7 @@ export default function ViewNomina() {
                                     <TableCell>Salario Bruto</TableCell>
                                     <TableCell>Deducciones</TableCell>
                                     <TableCell>Salario Neto</TableCell>
+                                    <TableCell>Pagar</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -123,6 +125,9 @@ export default function ViewNomina() {
                                         <TableCell>{nomina.salario_bruto}</TableCell>
                                         <TableCell>{nomina.deducciones}</TableCell>
                                         <TableCell>{nomina.salario_neto}</TableCell>
+                                        <TableCell>
+                                            <button className={StyleNomina.done}>Pagar</button>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
