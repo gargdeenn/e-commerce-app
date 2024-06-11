@@ -41,8 +41,10 @@ const Login = () => {
       const response = await api.post('/auth/login', payload);  // Ajusta la ruta según tu API
       localStorage.setItem('authToken', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
-      if (response) {
+      if (response.data.user.id_role == 2 || response.data.user.id_role == 3) {
         router.push('/dashboard');
+      }else {
+        router.push('/dashboard-user');
       }
     } catch (error) {
       console.error(error);
@@ -129,9 +131,7 @@ const Login = () => {
 };
 
 const ProtectedLogin = () => (
-  <Guard>
     <Login />
-  </Guard>
 );
 
 export default ProtectedLogin;

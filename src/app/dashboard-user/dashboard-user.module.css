@@ -1,0 +1,42 @@
+.input {
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+}
+
+.input button {
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 1px solid #E0E0E0;
+}
+
+.input button:hover {
+  background-color: #f0f0f0;
+}
+
+.input span {
+    background-color: white;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 1px solid #E0E0E0;
+}
+
+.input .cantidad {
+  padding: 5px 10px;
+}
+
+.remove {
+  background-color: white;
+  border: 1px solid red;
+  color: red;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.remove:hover {
+  background-color: #ffe6e6;
+}

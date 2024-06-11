@@ -1,0 +1,25 @@
+.done {
+  background-color: white;
+  border: 1px solid green;
+  color: green;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.done:hover {
+  background-color: #57A311;
+}
+
+.remove {
+  background-color: white;
+  border: 1px solid red;
+  color: red;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.remove:hover {
+  background-color: #ffe6e6;
+}

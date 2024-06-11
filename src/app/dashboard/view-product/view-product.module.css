@@ -1,0 +1,38 @@
+.remove {
+  background-color: white;
+  border: 1px solid red;
+  color: red;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.remove:hover {
+  background-color: #ffe6e6;
+}
+
+.edit {
+  background-color: white;
+  border: 1px solid yellow;
+  color: #D7D72B;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.edit:hover {
+  background-color: #FFFFBE;
+}
+
+.enviar {
+  background-color: white;
+  border: 1px solid blue;
+  color: blue;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.enviar:hover {
+  background-color: #ACB1C0;
+}
